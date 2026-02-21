@@ -1,5 +1,4 @@
-# 🌾 Agri_Care – Smart Agriculture Management System
-
+# 🌾 Agri_Care 
 ## 📌 Project Overview
 **Agri_Care** is an AI-powered smart agriculture web application developed to assist farmers in monitoring crops, detecting plant diseases, and improving agricultural productivity using modern technology.
 
