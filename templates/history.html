@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container my-5">
+    <h2 class="mb-4 text-center text-success fw-bold">
+        Your Prediction History
+    </h2>
+
+    {% if records and records|length > 0 %}
+
+    <div class="table-responsive shadow rounded border">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-dark text-center">
+                <tr>
+                    <th>Image</th>
+                    <th>Disease</th>
+                    <th>Confidence</th>
+                    <th>Fertilizer</th>
+                    <th>Pesticide</th>
+                    <th>Organic</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for record in records %}
+                <tr class="table-light">
+
+                    <!-- IMAGE -->
+                    <td class="text-center">
+                        <img
+                            src="{{ url_for('static', filename=record.filename) }}"
+                            class="rounded shadow-sm img-fluid"
+                            style="max-width:80px;"
+                            alt="Leaf Image"
+                        >
+                    </td>
+
+                    <!-- DISEASE -->
+                    <td class="text-center">
+                        <span class="badge {% if 'healthy' in record.prediction.lower() %}bg-success{% else %}bg-danger{% endif %}">
+                            {{ record.prediction }}
+                        </span>
+                    </td>
+
+                    <!-- CONFIDENCE -->
+                    <td>
+                        <div class="progress" style="height:25px;">
+                            <div class="progress-bar bg-success fw-bold"
+                                 style="width: {{ record.confidence }}%;">
+                                {{ record.confidence }}%
+                            </div>
+                        </div>
+                    </td>
+
+                    <!-- FERTILIZER -->
+                    <td>
+                        <ul class="list-unstyled mb-0 small">
+                            {% for item in record.fertilizer.split(',') %}
+                                <li>• {{ item.strip() }}</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+
+                    <!-- PESTICIDE -->
+                    <td>
+                        <ul class="list-unstyled mb-0 small">
+                            {% for item in record.pesticide.split(',') %}
+                                <li>• {{ item.strip() }}</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+
+                    <!-- ORGANIC -->
+                    <td>
+                        <ul class="list-unstyled mb-0 small">
+                            {% for item in record.organic.split(',') %}
+                                <li>• {{ item.strip() }}</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+
+                    <!-- DELETE -->
+                    <td class="text-center">
+                        <form method="POST"
+                              action="{{ url_for('delete_record', record_id=record.id) }}"
+                              onsubmit="return confirm('Are you sure you want to delete this record?');">
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                <i class="fa-solid fa-trash"></i> Delete
+                            </button>
+                        </form>
+                    </td>
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% else %}
+
+    <!-- EMPTY STATE -->
+    <div class="alert alert-info text-center shadow-sm">
+        <i class="fa-solid fa-circle-info me-2"></i>
+        No prediction history found. Upload a leaf image to get started 🌱
+    </div>
+
+    {% endif %}
+</div>
+
+<style>
+.table-hover tbody tr:hover {
+    background-color: #f1f8e9;
+    transform: scale(1.01);
+    transition: all 0.2s ease-in-out;
+}
+
+.progress-bar {
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    th, td {
+        font-size: 0.8rem;
+        padding: 0.4rem;
+    }
+    img {
+        max-width: 60px;
+    }
+}
+</style>
+
+{% endblock %}
